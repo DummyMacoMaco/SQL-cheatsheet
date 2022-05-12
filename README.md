@@ -1,11 +1,15 @@
 # Quick SQL Cheatsheet
 
+original fork from enochtangg's github repo
+
 A quick reminder of all relevant SQL queries and examples on how to use them. 
 
 This repository is constantly being updated and added to by the community. 
 Pull requests are welcome. Enjoy!
 
-# Table of Contents 
+# Table of Contents
+intro. [ SQL. ] (#intro)
+0. [ Data types. ] (#data_types)
 1. [ Finding Data Queries. ](#find)
 2. [ Data Modification Queries. ](#modify)
 3. [ Reporting Queries. ](#report)
@@ -13,6 +17,25 @@ Pull requests are welcome. Enjoy!
 5. [ View Queries. ](#view)
 6. [ Altering Table Queries.](#alter)
 7. [ Creating Table Query.](#create)
+
+<a name="intro"></a>
+SQL as:
+# DDL: Data Definition Language
+- SELECT
+- INSERT
+- CREATE
+- ALTER
+
+# DML: Data Manipulation Language
+- CREATE DOMAIN
+- {CREATE, ALTER, DROP} TABLE
+- {CREATE, ALTER, DROP} VIEW
+- {CREATE, DROP} INDEX
+- GRANT, REVOKE
+- COMMIT, ROLLBACK
+
+<a name="datat_types"></a>
+
 
 <a name="find"></a>
 # 1. Finding Data Queries
