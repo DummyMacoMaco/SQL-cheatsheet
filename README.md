@@ -9,7 +9,7 @@ Pull requests are welcome. Enjoy!
 
 # Table of Contents
 intro. [ SQL. ] (#intro)
-0. [ Data types. ] (#data_types)
+0. [ Data types. ] (#datatypes)
 1. [ Finding Data Queries. ](#find)
 2. [ Data Modification Queries. ](#modify)
 3. [ Reporting Queries. ](#report)
@@ -19,14 +19,14 @@ intro. [ SQL. ] (#intro)
 7. [ Creating Table Query.](#create)
 
 <a name="intro"></a>
-SQL as:
-# DDL: Data Definition Language
+# intro. SQL as:
+### DDL: Data Definition Language
 - SELECT
 - INSERT
 - CREATE
 - ALTER
 
-# DML: Data Manipulation Language
+### DML: Data Manipulation Language
 - CREATE DOMAIN
 - {CREATE, ALTER, DROP} TABLE
 - {CREATE, ALTER, DROP} VIEW
@@ -34,7 +34,7 @@ SQL as:
 - GRANT, REVOKE
 - COMMIT, ROLLBACK
 
-<a name="datat_types"></a>
+<a name="datattypes"></a>
 
 
 <a name="find"></a>
