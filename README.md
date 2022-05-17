@@ -280,13 +280,15 @@ FROM Table_name T1 JOIN Table_name T2 ON T1.columnA = T2.columnA
 ```
 * ❗ JOIN-condition can be performed on any column (same table remember)
 * ❗ in WHERE clause you can specify a particular condition to remove duplicates: same row but considered twice or same rows but in reverse ordere. To do this you can use the **<** operator between T1.columnB and T2.columnB for example
-* ❗ if columnA is not a PK, and if columnB is not a PK, the condition_to_remove_duplicates could be contain the following: <br /> T1.PK < T2.PK AND T1.columnB <> T2.columnB. But <br />
+* ❗ if columnA is not a PK, and if columnB is not a PK, the condition_to_remove_duplicates could be contain the following: <br /> T1.PK < T2.PK AND T1.columnB <> T2.columnB.
+<br/>**But**<br />
 $PK \Rightarrow {other\;column\;values}$
 <br/>so<br/>
-$(PK_1 == PK_2) \Rightarrow ({other\;column\;values}_1 == {other\;column\;values}_2)$
-<br/>so<br/>
-$({other\;column\;values}_1 \neq {other\;column\;values}_2) \Rightarrow (PK_1\neq PK_2)$
-<br/>~~T1.PK < T2.PK AND~~ **T1.columnB < T2.columnB**
+(PK_1 == PK_2) --> (other_column_values_1 == other_column_values_2)
+<br/>equals to<br/>
+NOT (other_column_values_1 == other_column_values_2) --> NOT (PK_1 == PK_2)
+<br/>so the condition can be simplified as follows:<br/>
+~~T1.PK < T2.PK AND~~ **T1.columnB < T2.columnB**
 
 <a name="view"></a>
 # 5. View Queries
