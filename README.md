@@ -8,18 +8,19 @@ This repository is constantly being updated and added to by the community.
 Pull requests are welcome. Enjoy!
 
 # Table of Contents
-intro. [ SQL. ] (#intro)
-0. [ Data types. ] (#datatypes)
-1. [ Finding Data Queries. ](#find)
-2. [ Data Modification Queries. ](#modify)
-3. [ Reporting Queries. ](#report)
-4. [ Join Queries. ](#joins)
-5. [ View Queries. ](#view)
-6. [ Altering Table Queries.](#alter)
-7. [ Creating Table Query.](#create)
+1. [ SQL. ](#intro)
+2. [ Data types. ](#datatypes)
+3. [ Finding Data Queries. ](#find)
+4. [ Data Modification Queries. ](#modify)
+5. [ Aggregate Functions ](#aggregatefunctions)
+6. [ Join Queries. ](#joins)
+7. [ View Queries. ](#view)
+8. [ Altering Table Queries.](#alter)
+9. [ Creating Table Query.](#create)
+
 
 <a name="intro"></a>
-# intro. SQL as:
+# 1. SQL as:
 ### DDL: Data Definition Language
 - SELECT
 - INSERT
@@ -28,12 +29,22 @@ intro. [ SQL. ] (#intro)
 
 ### DML: Data Manipulation Language
 - CREATE DOMAIN
+- {CREATE, DROP, USE} DATABASE
+```sql
+    CREATE DATABASE database_name;
+    DROP DATABASE database_name;
+    USE database_name;
+```
 - {CREATE, ALTER, DROP} TABLE
 - {CREATE, ALTER, DROP} VIEW
 - {CREATE, DROP} INDEX
 - GRANT, REVOKE
 - COMMIT, ROLLBACK
 
+## Order of execution of a Query
+FROM + JOIN -> WHERE -> GROUP BY -> HAVING -> SELECT -> DISTINCT -> ORDER BY -> LIMIT / OFFSET
+<br/>
+<br/>
 <a name="datattypes"></a>
 
 
@@ -42,6 +53,21 @@ intro. [ SQL. ] (#intro)
 
 ### **SELECT**: used to select data from a database
 * `SELECT` * `FROM` table_name;
+
+### **SELECT**: general syntax
+```sql
+SELECT [DISTINCT] target_list [AS alias_column]
+[ FROM table_name ] [AS alias_table]
+[ WHERE condition ]
+[ GROUP BY group_by_expression ]
+[ HAVING condition ]
+[ ORDER BY column_in_target_list [ ASC | DESC ] ]
+```
+
+#### **SELECT** + **ALIAS** to modify value and/or name of a column in the result-set
+```sql
+SELECT column1, (TemperatureCelsius+273,15) AS TemperatureKelvin FROM table_name
+```
 
 ### **DISTINCT**: filters away duplicate values and returns rows of specified column
 * `SELECT DISTINCT` column_name;
@@ -54,10 +80,20 @@ intro. [ SQL. ] (#intro)
 * `SELECT` * `FROM` table_name `WHERE` condition1 `AND` (condition2 `OR` condition3);
 * `SELECT` * `FROM` table_name `WHERE EXISTS` (`SELECT` column_name `FROM` table_name `WHERE` condition);
 
+### **WHERE** + **NULL**: used to filter records/rows in case of NULL value
+In case of condition on columns with a possible null value, the result is always ***false***
+```sql
+SELECT * FROM table_name WHERE column1 IS NULL;
+SELECT * FROM table_name WHERE column1 IS NOT NULL;
+```
+
 ### **ORDER BY**: used to sort the result-set in ascending or descending order
-* `SELECT` * `FROM` table_name `ORDER BY` column;
-* `SELECT` * `FROM` table_name `ORDER BY` column `DESC`;
-* `SELECT` * `FROM` table_name `ORDER BY` column1 `ASC`, column2 `DESC`;
+```sql
+SELECT * FROM table_name WHERE condition ORDER BY column;
+SELECT column1, column2 FROM table_name ORDER BY column1 DESC;
+SELECT column1,column2,column3 FROM table_name ORDER BY column2 [ASC], column1 DESC;
+```
+* ❗ the columns used to sort the result-set must be in the target list
 
 ### **SELECT TOP**: used to specify the number of records to return from top of table
 * `SELECT TOP` number columns_names `FROM` table_name `WHERE` condition;
@@ -86,26 +122,47 @@ intro. [ SQL. ] (#intro)
 * `SELECT` * `FROM` Products `WHERE` (column_name `BETWEEN` value1 `AND` value2) `AND NOT` column_name2 `IN` (value3, value4);
 * `SELECT` * `FROM` Products `WHERE` column_name `BETWEEN` #01/07/1999# AND #03/12/1999#;
 
-### **NULL**: values in a field with no value
-* `SELECT` * `FROM` table_name `WHERE` column_name `IS NULL`;
-* `SELECT` * `FROM` table_name `WHERE` column_name `IS NOT NULL`;
-
 ### **AS**: aliases are used to assign a temporary name to a table or column
 * `SELECT` column_name `AS` alias_name `FROM` table_name;
 * `SELECT` column_name `FROM` table_name `AS` alias_name;
 * `SELECT` column_name `AS` alias_name1, column_name2 `AS` alias_name2;
 * `SELECT` column_name1, column_name2 + ‘, ‘ + column_name3 `AS` alias_name;
+```sql
+SELECT column1, (TemperatureCelsius+273,15) AS TemperatureKelvin FROM table_name WHERE TemperatureKelvin > 298 ORDER BY TemperatureKelvin
+```
+
+### **SET OPERATOR**: general syntax
+```sql
+SELECT TargetList_1
+FROM Table_1
+WHERE condition_1
+                      UNION / INTERSECT / EXCEPT
+SELECT TargetList_2
+FROM Table_2
+WHERE condition_2
+```
+* ❗ `TargetList_1` must be the same (number, order, datatype) of `TargetList_2`
+* ❗ SET OPERATOR selects distinct values, to include duplicate use `ALL`
 
 ### **UNION**: set operator used to combine the result-set of two or more SELECT statements
-* Each SELECT statement within UNION must have the same number of columns
-* The columns must have similar data types
-* The columns in each SELECT statement must also be in the same order
-* `SELECT` columns_names `FROM` table1 `UNION SELECT` column_name `FROM` table2;
-* `UNION` operator only selects distinct values, `UNION ALL` will allow duplicates
+<br/>
+equivalent form with JOIN + OR-in-WHERE
+
+```sql
+SELECT TargetList_1
+FROM Table_1 JOIN Table_2 ON Table_1.col = Table_2.col
+WHERE condition_1 OR condition_2
+```
 
 ### **INTERSECT**: set operator which is used to return the records that two SELECT statements have in common
-* Generally used the same way as **UNION** above
-* `SELECT` columns_names `FROM` table1 `INTERSECT SELECT` column_name `FROM` table2;
+<br/>
+equivalent form with JOIN + AND-in-WHERE
+
+```sql
+SELECT TargetList_1
+FROM Table_1 JOIN Table_2 ON Table_1.col = Table_2.col
+WHERE condition_1 AND condition_2
+```
 
 ### **EXCEPT**: set operator used to return all the records in the first SELECT statement that are not found in the second SELECT statement
 * Generally used the same way as **UNION** above
@@ -117,10 +174,25 @@ intro. [ SQL. ] (#intro)
 * `SELECT` columns_names `FROM` table1 `WHERE` column_name operator (`ANY`|`ALL`) (`SELECT` column_name `FROM` table_name `WHERE` condition);
 
 ### **GROUP BY**: statement often used with aggregate functions (COUNT, MAX, MIN, SUM, AVG) to group the result-set by one or more columns
-* `SELECT` column_name1, COUNT(column_name2) `FROM` table_name `WHERE` condition `GROUP BY` column_name1 `ORDER BY` COUNT(column_name2) DESC;
+```sql
+SELECT column_name1, COUNT(column_name2)
+FROM table_name
+WHERE condition
+GROUP BY column_name1
+ORDER BY COUNT(column_name2) DESC;
+```
+* ❗ GROUP BY + SELECT => target list must be made up of columns (**_all or just some_**) IN GROUP BY clause
+* ❗ target list can contain AGGREGATE FUNCTIONS
+* ❗ SQL-99, target list can contain columns even if they don't appear in GROUP BY clause, **but** the GROUP BY clause must contain some UNIQUE NOT NULL column
 
-### **HAVING**: this clause was added to SQL because the WHERE keyword could not be used with aggregate functions
-* `SELECT` `COUNT`(column_name1), column_name2 `FROM` table `GROUP BY` column_name2 `HAVING` `COUNT(`column_name1`)` > 5;
+
+### **HAVING**: in the WHERE clause you can specify condition to be validated row by row, but if you need a condition to be validated on a group of rows, place it in the HAVING clause.
+```sql
+SELECT column_name2, COUNT(column_name1)
+FROM table_name
+GROUP BY column_name2
+HAVING COUNT(column_name1) > 5;
+```
 
 ### **WITH**: often used for retrieving hierarchical data or re-using temp result set several times in a query. Also referred to as "Common Table Expression"
 * `WITH RECURSIVE` cte `AS` (<br/>
@@ -147,8 +219,20 @@ intro. [ SQL. ] (#intro)
 * `DELETE FROM` table_name `WHERE` condition;
 * `DELETE` * `FROM` table_name;
 
-<a name="report"></a>
-# 3. Reporting Queries
+<a name="aggregatefunctions"></a>
+# 5. Aggregate Funtions
+> An aggregate function performs a calculation on a set of values to return a single value, 
+> got from the application of that specific function.
+### **AGGREGATE FUNCTION**: general syntax
+```sql
+SELECT column_X, CONT | SUM | AVG | MIN | MAX (column)
+FROM table_name
+[WHERE tuple_condition]
+[GROUP BY column_X]
+[ORDER BY column]
+```
+* ❗ just one aggreate function at a time, in the SELECT clause
+* ❗ aggregate functions performed after WHERE clause
 
 ### **COUNT**: returns the # of occurrences
 * `SELECT COUNT (DISTINCT` column_name`)`;
@@ -165,6 +249,13 @@ intro. [ SQL. ] (#intro)
 
 <a name="joins"></a>
 # 4. Join Queries
+### **JOIN**: general syntax
+```sql
+SELECT [DISTINCT] target_list [AS alias_column]
+FROM table1_name [AS alias_table] [type_of_join] JOIN table2_name ON join_condition [ [type_of_join] JOIN table3_name ON join_condition ...]
+[ WHERE tuple_of_tableX_name_condition ]
+```
+### types of join: ###
 
 ###  **INNER JOIN**: returns records that have matching value in both tables
 * `SELECT` column_names `FROM` table1 `INNER JOIN` table2 `ON` table1.column_name=table2.column_name;
@@ -179,8 +270,23 @@ intro. [ SQL. ] (#intro)
 ### **FULL (OUTER) JOIN**: returns all records when there is a match in either left or right table
 * `SELECT` column_names `FROM` table1 ``FULL OUTER JOIN`` table2 `ON` table1.column_name=table2.column_name;
 
+* ❗ with OUTER-JOIN, you should have to ***handle NULL values in WHERE clause***
+
 ### **Self JOIN**: a regular join, but the table is joined with itself
-* `SELECT` column_names `FROM` table1 T1, table1 T2 `WHERE` condition;
+```sql
+SELECT target_list
+FROM Table_name T1 JOIN Table_name T2 ON T1.columnA = T2.columnA
+[ WHERE condition_to_remove_duplicates ]
+```
+* ❗ JOIN-condition can be performed on any column (same table remember)
+* ❗ in WHERE clause you can specify a particular condition to remove duplicates: same row but considered twice or same rows but in reverse ordere. To do this you can use the **<** operator between T1.columnB and T2.columnB for example
+* ❗ if columnA is not a PK, and if columnB is not a PK, the condition_to_remove_duplicates could be contain the following: <br /> T1.PK < T2.PK AND T1.columnB <> T2.columnB. But <br />
+$PK \Rightarrow {other\;column\;values}$
+<br/>so<br/>
+$(PK_1 == PK_2) \Rightarrow ({other\;column\;values}_1 == {other\;column\;values}_2)$
+<br/>so<br/>
+$({other\;column\;values}_1 \neq {other\;column\;values}_2) \Rightarrow (PK_1\neq PK_2)$
+<br/>~~T1.PK < T2.PK AND~~ **T1.columnB < T2.columnB**
 
 <a name="view"></a>
 # 5. View Queries
@@ -216,3 +322,156 @@ intro. [ SQL. ] (#intro)
    `column3` `datatype`, <br />
    `column4` `datatype`, <br />
    `);`
+   
+<a name="nestedqueries"></a>
+# 9. Nested Queries or Subqueries
+
+### **NESTED QUERY** (or subquery) is a query nested inside another query
+* ⛩️ DIVIDE ET IMPERA approach.
+* used to return a **single-value** (*single row and single column*), a **single-column** (*single column but multiple rows*) or a **multiple-columns** (*multiple columns and multiple rows*).
+* **non**-correlated subquery is evaluated before the outer query, just one time. 
+* **correlated** subquery is evaluated *once for each row of the outer query processed*, this because the subquery refers to a column that is not in the FROM clause, but is related to the outer query-table.
+* used:
+    - within `WHERE` clause to **filter** data/rows
+    - within `HAVING` clause to **group** using, for example, an aggregate function
+    - within `FROM` clause
+
+#### syntax: **single-value** nested query in WHERE clause with *COMPARISON OPERATOR*
+```sql
+SELECT target_list_1
+FROM Table_1 T1
+WHERE columnX {=, <>, <, <=, >, >=} ( SELECT columnX
+                                      FROM Table_2 T2
+                                      WHERE condition_on_T2_PK )
+```
+* ❗ single-value subquery so:
+  - one column, columnX, same domain
+  - one value, condition_on_T2_**PK** in subquery ***selects just one row using the Primary Key***
+
+#### syntax: **single-column** nested query in WHERE clause with *COMPARISON OPERATOR + **ANY/ALL***
+```sql
+SELECT target_list_1
+FROM Table_1 T1
+WHERE columnX {=, <>, <, <=, >, >=} ANY/ALL ( SELECT columnX
+                                              FROM Table_2 T2
+                                              WHERE condition_on_T2 )
+```
+* ❗ single-column subquery so:
+  - one column, columnX, same domain
+  - multiple rows, values.
+* ❗ `ANY` return true if any of the subqueries values meet the condition with the comparison operator.
+  - pattern to select non-max values for columnX with ANY and Table subquery
+  ```sql
+  ... WHERE columnX < ANY (SELECT columnX FROM Table_2)
+  ```
+  - alternative with aggregate function and Single-Value subquery
+  ```sql
+  ... WHERE columnX < (SELECT MAX(columnX) FROM Table_2)
+  ```
+* ❗ `ALL` return true if all of the subqueries values meet the condition with the comparison operator
+
+   - pattern to select max value for columnX with ALL, **NULLABLE** column and Table subquery
+  ```sql
+  ... WHERE columnX >= ALL (SELECT columnX FROM Table_2 WHERE columnX IS NOT NULL)
+  ```
+    - alternative with aggregate function and Single-Value subquery, where columnX can be NULL
+  ```sql
+  ... WHERE columnX = (SELECT MAX(columnX) FROM Table_2)
+  ```
+#### syntax: **single-column** nested query in WHERE clause with **IN**
+```sql
+SELECT target_list_1
+FROM Table_1 T1
+WHERE columnX IN/NOT IN ( SELECT columnX 
+                          FROM Table_2 T2
+                          WHERE condition_on_T2 )
+```
+* ❗ the subquery must select for a column value (columnX) to produce a list of values for the outer columnX 
+#### syntax: **multiple-columns** nested query in WHERE clause with **IN**
+```sql
+SELECT target_list_1
+FROM Table_1 T1
+WHERE (columnA, columnB) IN/NOT IN (  SELECT columnA, columnB
+                                      FROM Table_2 T2
+                                      WHERE condition_on_T2 )
+```
+* ❗ the subquery must select for multiple columns, can contain an aggregate function combined to a column to produce multiple rows for example
+  ```sql
+  ... WHERE (id, Qty) IN (SELECT id, MIN(Qty) FROM Table_2 GROUP BY id)
+  ```
+#### syntax: **single-value** nested query in SELECT clause
+* almost a correlated subquery
+* used to display in the result-set a data related to a specific row of the outer query
+```sql
+SELECT target_list_1, (
+                        SELECT columnX /expression
+                        FROM Table_2 T2
+                        WHERE T1.columnA = T2.columnB ... AND condition_on_T2_PK
+                      )
+FROM Table_1 T1
+[ WHERE condition_on_T1 ]
+```
+* ❗ the subquery must select for a single value, so for example columnX can be used in combination to condition_on_T2_PK or the expression can be an aggregate function for example
+  ```sql
+  SELECT target_list_1, (
+                          SELECT columnX
+                          FROM Table_2 T2
+                          WHERE T1.columnA = T2.columnB AND T2.PK = <value>
+                        )...
+  ```
+  ```sql
+  SELECT target_list_1, (
+                          SELECT MIN(Qty)
+                          FROM Table_2 T2
+                          WHERE T1.columnA = T2.columnB
+                        )...
+  ```
+#### syntax: **multiple-columns** nested query in FROM clause
+* never a correlated subquery
+```sql
+SELECT target_list_1
+FROM Table_1 T1 [OUTER] JOIN ( SELECT columnA [, AGGREGATE_FUNC(columnB)]
+                               FROM Table_2 T2
+                               WHERE condition_on_T2 
+                               [GROUP BY columnA]
+                               )
+                        ON T1.columnA = T2.columnA
+[ WHERE condition_on_T1_T2 ]
+```
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
