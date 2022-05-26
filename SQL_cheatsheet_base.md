@@ -6,7 +6,7 @@ A quick reminder of all relevant SQL queries and examples on how to use them.
 
 In general is used the MySQL sytntax.
 
-# Table of Contents
+# [Table of Contents.](#tableofcontentes)
 
 1. [SQL.](#intro)
 2. [Data types & Custom Domain.](#datatypes)
@@ -58,6 +58,8 @@ to grant or revoke the credentials needed to use DML, DDL and DCL
 
 - `GRANT`
 - `REVOKE`
+
+**[top](#tableofcontentes)**
 
 <a name="datattypes"></a>
 
@@ -157,6 +159,8 @@ ADD CONSTRAINT
 CHECK (score >= 1 AND score <= 20);
 ```
 
+**[top](#tableofcontentes)**
+
 <a name="database"></a>
 
 # 3. Database
@@ -175,6 +179,8 @@ DROP DATABASE db_name
 
     ✅ snake_case
     ✅ 30 bytes long (1 byte = 1 char ASCII)
+
+**[top](#tableofcontentes)**
 
 <a name="table"></a>
 
@@ -311,6 +317,8 @@ ALTER TABLE table_name MODIFY COLUMN column_name new_data_type_or_domain [constr
 ```sql
 ALTER TABLE table_name DROP COLUMN column_name;
 ```
+
+**[top](#tableofcontentes)**
 
 <a name="find"></a>
 
@@ -458,7 +466,7 @@ WHERE condition_1 AND condition_2
 ### **EXCEPT**: set operator used to return all the records in the first SELECT statement that are not found in the second SELECT statement
 
 <br/>
-equivalent form with <a name="nestedqueries">SUBQUERY</a> (see later) + NOT IN
+equivalent form with subquery (see later) + NOT IN
 
 ```sql
 SELECT [DISTINCT] targetList_1
@@ -502,6 +510,8 @@ FROM table_name
 GROUP BY column_name2
 HAVING COUNT(column_name1) > 5;
 ```
+
+**[top](#tableofcontentes)**
 
 <a name="modify"></a>
 
@@ -556,6 +566,8 @@ INSERT INTO table_name (target_list)
 
 - `DELETE` * `FROM` table_name;
 
+**[top](#tableofcontentes)**
+
 <a name="aggregatefunctions"></a>
 
 # 7. Aggregate Funtions
@@ -594,6 +606,8 @@ FROM table_name
 ### **SUM()**: returns the total sum of a numeric column
 
 - `SELECT SUM (`column_name`) FROM` table_name `WHERE` condition;
+
+**[top](#tableofcontentes)**
 
 <a name="joins"></a>
 
@@ -663,6 +677,8 @@ NOT (other_column_values_1 == other_column_values_2) --> NOT (PK_1 == PK_2)
 <br/>so the condition can be simplified as follows:<br/>
 ~~T1.PK < T2.PK AND~~ **T1.columnB < T2.columnB**
 
+**[top](#tableofcontentes)**
+
 <a name="view"></a>
 
 # 9. View
@@ -678,6 +694,8 @@ NOT (other_column_values_1 == other_column_values_2) --> NOT (PK_1 == PK_2)
 ### **DROP**: drop a view
 
 - `DROP VIEW` view_name;
+
+**[top](#tableofcontentes)**
 
 <a name="nestedqueries"></a>
 
@@ -846,3 +864,5 @@ WHERE [NOT] EXISTS            ( SELECT *
                               )
 [AND condition_on_T1 ]
 ```
+
+**[top](#tableofcontentes)**
