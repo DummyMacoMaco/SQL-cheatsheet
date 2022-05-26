@@ -422,7 +422,10 @@ SELECT column1,column2,column3 FROM table_name ORDER BY column2 [ASC], column1 D
 - `SELECT` column_name1, column_name2 + ‘, ‘ + column_name3 `AS` alias_name;
 
 ```sql
-SELECT column1, (TemperatureCelsius+273,15) AS TemperatureKelvin FROM table_name WHERE TemperatureKelvin > 298 ORDER BY TemperatureKelvin
+SELECT column1, (TemperatureCelsius+273,15) AS TemperatureKelvin
+FROM table_name
+WHERE TemperatureKelvin > 298
+ORDER BY TemperatureKelvin
 ```
 
 ### **SET OPERATORs**: general syntax
@@ -617,7 +620,8 @@ FROM table_name
 
 ```sql
 SELECT [DISTINCT] target_list [AS alias_column]
-FROM table1_name [AS alias_table] [type_of_join] JOIN table2_name ON join_condition [ [type_of_join] JOIN table3_name ON join_condition ...]
+FROM table1_name [AS alias_table] [type_of_join] JOIN table2_name ON join_condition 
+                                                 [ [type_of_join] JOIN table3_name ON join_condition ...]
 [ WHERE tuple_of_tableX_name_condition ]
 ```
 
