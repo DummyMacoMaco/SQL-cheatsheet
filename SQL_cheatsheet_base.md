@@ -21,7 +21,7 @@ In general is used the MySQL sytntax.
 
 ## Order of execution of a Query
 
-    FROM + JOIN -> WHERE -> GROUP BY -> HAVING -> SELECT -> DISTINCT -> ORDER BY -> LIMIT / OFFSET
+FROM :arrow_right: JOIN :arrow_right: WHERE :arrow_right: GROUP BY :arrow_right: HAVING :arrow_right: SELECT :arrow_right: DISTINCT :arrow_right:  UNION :arrow_right: ORDER BY :arrow_right: LIMIT / OFFSET
 
 <a name="intro"></a>
 
