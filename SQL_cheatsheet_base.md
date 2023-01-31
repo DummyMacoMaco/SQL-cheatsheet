@@ -533,7 +533,7 @@ INSERT INTO table_name (column1, ..., columnx) VALUES (value1, ..., valuex)
 - insert: in case values are specified for **ALL** columns in table
 
 ```sql
-INSERT INTO VALUES (value1, ..., valuex)
+INSERT INTO table_name VALUES (value1, ..., valuex)
 ```
 
 - insert: **MULTIPLE** rows
@@ -545,7 +545,7 @@ INSERT INTO table_name (column1, ..., columnx)
     (value1, ..., valuex) ,
     (value1, ..., valuex) ,
     ...
-    (value1, ..., valuex) ,
+    (value1, ..., valuex) ;
 ```
 
 - insert: **MULTIPLE** rows **from** an other table
@@ -557,7 +557,7 @@ INSERT INTO table_name (target_list)
 
 - ❗ targetl_list: same domain, order, number of columns
 
-### **UPDATE**: used to modify the existing records in a table
+### **UPDATE**: used to modify **ALL** the existing records in a table
 
 - `UPDATE` table_name `SET` column1 = value1, column2 = value2 `WHERE` condition;
 
